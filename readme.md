@@ -14,11 +14,12 @@ npm install
     "privateKey": "0x",
     "url": "https://evm.confluxrpc.com",
     "CFXsAddress": "0xd3a4d837e0a7b40de0b4024fa0f93127dd47b8b8",
-    "limitAmount": 2,
-    "limitPrice:": 0.09
+    "limitAmount": 500,
+    "limitPrice:": 0.1,
+    "frequency": 10000
 }
 ```
-将 privateKey 替换为您的实际私钥；limitAmount表示每次需要抄底的最大数量；limitPrice表示抄底阈值，大于该值不抄底。
+将 privateKey 替换为您的实际私钥；limitAmount表示每次需要抄底的最大数量；limitPrice表示抄底阈值，大于该值不抄底;frequency是指抄底频率，默认10秒一次，设置的时候需要转换为毫秒，设置10则填写100000。
 
 ## 执行
 要运行脚本，请执行以下命令：

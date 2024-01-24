@@ -2,6 +2,7 @@
     "privateKey": "0x",
     "url": "https://evm.confluxrpc.com",
     "CFXsAddress": "0xd3a4d837e0a7b40de0b4024fa0f93127dd47b8b8",
-    "limitAmount": 2,
-    "limitPrice:": 0.09
+    "limitAmount": 500,
+    "limitPrice:": 0.1,
+    "frequency": 10000
 }

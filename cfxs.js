@@ -14,7 +14,7 @@ async function fetchData() {
     try {
         const response = await axios.get(url);
         const data = response.data.rows.map(entry => ({ id: parseInt(entry.id), price: entry.amount, quantity: entry.quantity, unitPrice: entry.unitprice }));
-        console.log("从市场获取数据条数：", data.length);
+        // console.log("从市场获取数据条数：", data.length);
         return data;
     } catch (error) {
         console.error('从市场获取数据失败:', error.message);
@@ -34,25 +34,26 @@ async function callUnlockingScriptbatch(limitAmount, limitPrice) {
     for (let index = 0; index < idObjects.length; index++) {
         const idObject = idObjects[index];
         // 判断均价是否符合条件
-        if(idObject.unitPrice > limitPrice) {
+        if(parseFloat(idObject.unitPrice) > parseFloat(limitPrice)) {
             continue;
         }
         // 如果当前cfxs太多，就不抄底这个
-        if (currentTotal + idObject.quantity > limitAmount) {
+        if (currentTotal + parseInt(idObject.quantity) > limitAmount) {
             continue;
         }
         // 每次循环都把id放到selectedIds数组里
         selectedIds.push(idObject.id);
         // 每次循环都把idObject里面的price*10^18放到pricesArray数组里
-        pricesArray.push(idObject.price * 10 ** 18);
+        pricesArray.push(String(idObject.price * 10 ** 18));
         // 支付类型
         USDArray.push("0");
         // 更新当前总量
-        currentTotal += idObject.quantity;
+        currentTotal += parseInt(idObject.quantity);
         // 累加总price
-        totalPrice += idObject.price;
+        totalPrice += parseFloat(idObject.price);
     }
     if(currentTotal === 0){
+        console.log("暂无符合条件单")
         return;
     }
     console.log("本次抄底Ids：", selectedIds, "数量：", currentTotal, "总价：", totalPrice)
@@ -67,4 +68,11 @@ async function callUnlockingScriptbatch(limitAmount, limitPrice) {
     }
 }
 
-callUnlockingScriptbatch(config.limitAmount, config.limitPrice);
+async function run() {
+    while (true) {
+        await callUnlockingScriptbatch(config.limitAmount, config.limitPrice);
+      await new Promise(resolve => setTimeout(resolve, config.frequency));
+    }
+  }
+
+run()
